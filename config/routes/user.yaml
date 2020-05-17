@@ -1,0 +1,9 @@
+registration_post:
+    path: /registration
+    controller: App\Controller\RegistrationController::createUser
+    methods: [POST]
+
+registration_get:
+    path: /registration
+    controller: App\Controller\RegistrationController::index
+    methods: [GET]
