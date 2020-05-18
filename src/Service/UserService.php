@@ -12,15 +12,19 @@ use App\Service\Validation\ValidationOrganisation;
 use App\Service\Validation\ValidationPhone;
 use App\Service\Validation\ValidationSurname;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserService
 {
     /** @var EntityManagerInterface */
     private $em;
 
-    public function __construct(EntityManagerInterface $em)
+    private $userPasswordEncoder;
+
+    public function __construct(EntityManagerInterface $em, UserPasswordEncoderInterface $userPasswordEncoder)
     {
         $this->em = $em;
+        $this->userPasswordEncoder = $userPasswordEncoder;
     }
 
     public function getUsers(): array
@@ -81,9 +85,10 @@ class UserService
             ->setInvited($invited)
             ->setName($data['name'])
             ->setOrganisation($organisation)
-            ->setPassword($data['password'])
             ->setPhone($data['phone'])
             ->setSurname($data['surname']);
+        $password = $this->userPasswordEncoder->encodePassword($newUser, $data['password']);
+        $newUser->setPassword($password);
         $this->em->persist($newUser);
         $this->em->flush();
 
