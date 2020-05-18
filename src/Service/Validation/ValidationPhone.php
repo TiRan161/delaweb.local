@@ -12,15 +12,17 @@ class ValidationPhone extends AbstractValidation
         $value = $this->value;
 
         if (empty($this->value)) {
-            $this->message = 'Отсутствует номер телефона пользователя';
+            return $this->message = 'Отсутствует номер телефона пользователя';
         }
 
         if (!is_string($value)) {
-            $this->message = 'Not valid type';
+            return $this->message = 'Телефон Not valid type';
         }
 
         if (strlen($value) < 6 || strlen($value) > 15  ) {
-            $this->message = 'Длина номера не соответствует заданному диапазону 6-15';
+            return $this->message = 'Длина номера не соответствует заданному диапазону 6-15';
         }
+
+        return $this->isValid = true;
     }
 }

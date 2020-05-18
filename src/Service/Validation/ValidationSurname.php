@@ -12,11 +12,11 @@ class ValidationSurname extends AbstractValidation
             return $this->message = 'Отсутствует фамилия пользователя';
         }
 
-        if (is_string($this->value)) {
-            $this->message = 'Not valid type';
+        if (!is_string($this->value)) {
+            return $this->message = 'Фамилия Not valid type';
         }
 
-        if (!(preg_match("/^[а-яА-ЯёЁa-zA-Z]+$/", $this->value))) {
+        if (!(preg_match("/^[а-яёa-z]+$/iu",$this->value))) {
             return $this->message = 'Фамилия содержит неподходящие символы';
         }
 

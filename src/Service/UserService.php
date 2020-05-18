@@ -6,7 +6,9 @@ namespace App\Service;
 
 use App\Entity\Organisation;
 use App\Entity\User;
+use App\Service\Validation\ValidationInvited;
 use App\Service\Validation\ValidationName;
+use App\Service\Validation\ValidationOrganisation;
 use App\Service\Validation\ValidationPhone;
 use App\Service\Validation\ValidationSurname;
 use Doctrine\ORM\EntityManagerInterface;
@@ -26,7 +28,85 @@ class UserService
         return $this->em->getRepository(User::class)->findAll();
     }
 
-    public function registration(array $data): array
+    public function createUser(array $data): array
+    {
+        $result = $this->validation($data);
+
+        if (!$result['status']) {
+            return $result;
+        }
+
+        $organisation = $this->getOrganisationByName($data['organisation']);
+        if ($organisation === null) {
+            $result['status'] = false;
+            $result['message'] = 'Не удалось создать запись Организация';
+        }
+        /** @var User $invited */
+        $invited = $this->em->find(User::class, $data['invited']);
+
+        if ($invited === null) {
+            $result['status'] = false;
+            $result['message'] = 'Отсутствует пользователь который пригласил';
+            return $result;
+        }
+
+//
+//        Необходима доработка
+//
+
+        if (empty($data['password'])) {
+            $result['status'] = false;
+            $result['message'] = 'Отсутствует пароль';
+            return $result;
+        }
+
+        if (empty($data['confirmed-password'])) {
+            $result['status'] = false;
+            $result['message'] = 'Отсутствет подтверждение пароля';
+            return $result;
+        }
+
+        if ($data['password'] !== $data['confirmed-password']) {
+            $result['status'] = false;
+            $result['message'] = 'Пароли не совпадают';
+            return $result;
+        }
+
+//
+//
+//
+
+
+        $newUser = (new User())
+            ->setInvited($invited)
+            ->setName($data['name'])
+            ->setOrganisation($organisation)
+            ->setPassword($data['password'])
+            ->setPhone($data['phone'])
+            ->setSurname($data['surname']);
+        $this->em->persist($newUser);
+        $this->em->flush();
+
+
+        return $result;
+    }
+
+    private function getOrganisationByName(string $name): Organisation
+    {
+        $organisation = $this->em->getRepository(Organisation::class)->findOneBy(['name' => $name]);
+
+        if ($organisation === null) {
+            $organisation = (new Organisation())
+                ->setName($name);
+
+            $this->em->persist($organisation);
+            $this->em->flush();
+        }
+
+        return $organisation;
+    }
+
+    private function validation(array $data): array
     {
         $result = [
             'status' => true,
@@ -54,74 +134,19 @@ class UserService
             return $result;
         }
 
-        if (empty($data['invited'])) {
+        $isValidInvited = new ValidationInvited($data['invited']);
+        if (!$isValidInvited->isValid()) {
+            $result['message'] = $isValidInvited->getMessage();
             $result['status'] = false;
-            $result['message'] = 'Отсутствует идентификатор пользователя который пригласил';
             return $result;
         }
 
-        $invited = $this->em->find(User::class, $data['invited']);
-
-        if ($invited === null) {
+        $isValidOrganisation = new ValidationOrganisation($data['organisation']);
+        if (!$isValidOrganisation->isValid()) {
+            $result['message'] = $isValidOrganisation->getMessage();
             $result['status'] = false;
-            $result['message'] = 'Отсутствует пользователь который пригласил';
             return $result;
         }
-
-//        if (empty($data['name'])) {
-//            $result['status'] = false;
-//            $result['message'] = 'Отсутствует имя пользователя';
-//            return $result;
-//        }
-
-        if (empty($data['organisation'])) {
-            $result['status'] = false;
-            $result['message'] = 'Отсутствует пользователь который пригласил';
-            return $result;
-        }
-
-        if (empty($data['password'])) {
-            $result['status'] = false;
-            $result['message'] = 'Отсутствует пароль';
-            return $result;
-        }
-
-        if (empty($data['confirmed-password'])) {
-            $result['status'] = false;
-            $result['message'] = 'Отсутствет подтверждение пароля';
-            return $result;
-        }
-
-        if ($data['password'] !== $data['confirmed-password']) {
-            $result['status'] = false;
-            $result['message'] = 'Пароли не совпадают';
-            return $result;
-        }
-
-//        if (empty($data['phone'])) {
-//            $result['status'] = false;
-//            $result['message'] = 'Отсутствует номер телефона';
-//        }
-//
-//        if (empty($data['surname'])) {
-//            $result['status'] = false;
-//            $result['message'] = 'Отсутствует фамилия пользователя';
-//        }
-
-
-        $organisation = $this
-            ->em
-            ->getRepository(Organisation::class)
-            ->findOneBy(['id' => $data['organisation']]);
-
-
-        $newUser = (new User())
-            ->setInvited($invited)
-            ->setName($data['name'])
-            ->setOrganisation($organisation)
-            ->setPassword($data['password'])
-            ->setPhone($data['phone'])
-            ->setSurname($data['surname']);
 
         return $result;
     }

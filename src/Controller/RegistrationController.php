@@ -6,7 +6,7 @@ namespace App\Controller;
 
 use App\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
+//use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class RegistrationController extends AbstractController
@@ -19,7 +19,7 @@ class RegistrationController extends AbstractController
         $this->userService = $userService;
     }
 
-    public function index(Request $request)
+    public function index()
     {
         $users = $this->userService->getUsers();
         var_dump($users);
@@ -31,15 +31,15 @@ class RegistrationController extends AbstractController
     {
 
         $data = $request->request->all();
-        $result = $this->userService->registration($data);
+        $result = $this->userService->createUser($data);
         var_dump($result);
         die();
-        //$data = json_decode($request->getContent());
+//        //$data = json_decode($request->getContent());
 
-        $response = new JsonResponse($result);
-        $response->setEncodingOptions(JSON_UNESCAPED_UNICODE);
-
-        return $response;
+//        $response = new JsonResponse($result);
+//        $response->setEncodingOptions(JSON_UNESCAPED_UNICODE);
+//
+//        return $response;
 
     }
 
