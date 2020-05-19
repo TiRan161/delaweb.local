@@ -21,6 +21,10 @@ class RegistrationController extends AbstractController
 
     public function index()
     {
+        if ($this->getUser()) {
+            return $this->redirectToRoute('profile');
+        }
+
         $users = $this->userService->getUsers();
 
         return $this->render('registration.html.twig', ['users' => $users]);
@@ -28,6 +32,7 @@ class RegistrationController extends AbstractController
 
     public function createUser(Request $request)
     {
+
 
         $data = $request->request->all();
         $result = $this->userService->createUser($data);

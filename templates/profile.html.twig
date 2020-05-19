@@ -1,6 +1,76 @@
 {% extends 'base.html.twig' %}
+{% block title %} Профиль {% endblock %}
 {% block body %}
-    {{ user.name }}
-    {{ user.surname }}
-    {{ user.phone }}
+    <div style="justify-content: center; display: flex; align-items: center; width: 500px; margin: auto">
+
+        <form name="profile-form" id="profile-form" method="post">
+            <h1>Личные данные</h1>
+            <div class="form-group">
+                <label for="name">Имя</label>
+                <input name="name" type="text" class="form-control" id="name" value="{{ user.name }}">
+            </div>
+
+            <div class="form-group">
+                <label for="surname">Фамилия</label>
+                <input name="surname" type="text" class="form-control" id="surname" value="{{ user.surname }}">
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Телефон</label>
+                <input name="phone" type="number" class="form-control" id="phone" value="{{ user.phone }}">
+            </div>
+
+            <div class="form-group">
+                <label for="invited">Кто вас пригласил?</label>
+                <select name="invited" class="form-control" id="invited">
+                    {% for member in users %}
+                        {% if user.invited.id == member.id %}
+                            <option selected value="{{ member.id }}">{{ member.name }} {{ member.surname }}</option>
+                        {% else %}
+                            <option value="{{ member.id }}">{{ member.name }} {{ member.surname }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="organisation">Организация</label>
+                <input name="organisation" type="text" class="form-control" id="organisation"
+                       value="{{ user.organisation.name }}">
+            </div>
+
+            {#            <div class="form-group">#}
+            {#                <label for="password">Пароль</label>#}
+            {#                <input name="password" type="password" class="form-control" id="password">#}
+            {#            </div>#}
+
+            {#            <div class="form-group">#}
+            {#                <label for="confirmed-password">Подтвердите пароль</label>#}
+            {#                <input name="confirmed-password" type="password" class="form-control" id="confirmed-password">#}
+            {#            </div>#}
+
+            <button id="saveProfileButton" type="submit" class="btn btn-primary btn-block">Сохранить изменения</button>
+
+        </form>
+    </div>
+
+    <script>
+        $('#saveProfileButton').on('click', function (e) {
+            e.preventDefault();
+            const formData = $('#profile-form').serialize()
+
+            $.ajax({
+                url: '/user/profile',
+                type: 'POST',
+                data: formData,
+                success: function (data) {
+                    alert(data)
+
+                }
+            })
+        });
+
+
+    </script>
 {% endblock %}
+

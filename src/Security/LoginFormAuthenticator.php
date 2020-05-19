@@ -3,6 +3,7 @@
 namespace App\Security;
 
 use App\Entity\User;
+use App\Security\Exception\PasswordNotValid;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -72,7 +73,8 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
 
         if (!$user) {
             // fail authentication with a custom error
-            throw new CustomUserMessageAuthenticationException('Phone could not be found.');
+            throw new CustomUserMessageAuthenticationException('Телефон не найден.');
+//            throw new CustomUserMessageAuthenticationException('Phone could not be found.');
         }
 
         return $user;
@@ -81,7 +83,11 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     public function checkCredentials($credentials, UserInterface $user)
     {
         $password = $credentials['password'];
-        return $this->userPasswordEncoder->isPasswordValid($user,$password);
+        if (!$this->userPasswordEncoder->isPasswordValid($user,$password)) {
+            throw new PasswordNotValid();
+        }
+//        return $this->userPasswordEncoder->isPasswordValid($user,$password);
+        return true;
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)

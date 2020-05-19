@@ -11,3 +11,9 @@ registration_get:
 profile:
     path: /profile
     controller: App\Controller\ProfileController::index
+    methods: [GET]
+
+update_profile:
+    path: /profile
+    controller: App\Controller\ProfileController::updateProfile
+    methods: [POST]

@@ -6,11 +6,15 @@ namespace App\Service;
 
 use App\Entity\Organisation;
 use App\Entity\User;
+use App\Repository\UserRepository;
 use App\Service\Validation\ValidationInvited;
 use App\Service\Validation\ValidationName;
 use App\Service\Validation\ValidationOrganisation;
 use App\Service\Validation\ValidationPhone;
 use App\Service\Validation\ValidationSurname;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -32,9 +36,85 @@ class UserService
         return $this->em->getRepository(User::class)->findAll();
     }
 
+    public function getUsersNotEqual(User $user): Collection
+    {
+        /** @var UserRepository $userRepository */
+        $userRepository = $this->em->getRepository(User::class);
+        return $userRepository->matching(new Criteria(Criteria::expr()->neq('id', $user->getId())));
+    }
+
+    public function updateUser(User $user, array $data): array
+    {
+        $result = $this->validation($data);
+
+        if ($result['status'] === true) {
+            $organisation = $this->getOrganisationByName($data['organisation']);
+            $invited = $this->em->find(User::class, $data['invited']);
+
+            $user->setInvited($invited)
+                ->setName($data['name'])
+                ->setOrganisation($organisation)
+                ->setPhone($data['phone'])
+                ->setSurname($data['surname']);
+            $this->em->persist($user);
+            $this->em->flush();
+
+            return $result;
+        }
+        return $result;
+    }
+
+
     public function createUser(array $data): array
     {
         $result = $this->validation($data);
+
+        if (!$result['status']) {
+            return $result;
+        }
+
+        $result = $this->validationPassword($data);
+        if (!$result['status']) {
+            return $result;
+        }
+
+
+        $organisation = $this->getOrganisationByName($data['organisation']);
+        $invited = $this->em->find(User::class, $data['invited']);
+
+        $newUser = (new User())
+            ->setInvited($invited)
+            ->setName($data['name'])
+            ->setOrganisation($organisation)
+            ->setPhone($data['phone'])
+            ->setSurname($data['surname']);
+        $password = $this->userPasswordEncoder->encodePassword($newUser, $data['password']);
+        $newUser->setPassword($password);
+        $this->em->persist($newUser);
+        $this->em->flush();
+
+        return $result;
+
+    }
+
+    private function getOrganisationByName(string $name): Organisation
+    {
+        $organisation = $this->em->getRepository(Organisation::class)->findOneBy(['name' => $name]);
+
+        if ($organisation === null) {
+            $organisation = (new Organisation())
+                ->setName($name);
+
+            $this->em->persist($organisation);
+            $this->em->flush();
+        }
+
+        return $organisation;
+    }
+
+    private function validation(array $data): array
+    {
+        $result = $this->validationData($data);
 
         if (!$result['status']) {
             return $result;
@@ -54,64 +134,11 @@ class UserService
             return $result;
         }
 
-//
-//        Необходима доработка
-//
-
-        if (empty($data['password'])) {
-            $result['status'] = false;
-            $result['message'] = 'Отсутствует пароль';
-            return $result;
-        }
-
-        if (empty($data['confirmed-password'])) {
-            $result['status'] = false;
-            $result['message'] = 'Отсутствет подтверждение пароля';
-            return $result;
-        }
-
-        if ($data['password'] !== $data['confirmed-password']) {
-            $result['status'] = false;
-            $result['message'] = 'Пароли не совпадают';
-            return $result;
-        }
-
-//
-//
-//
-
-
-        $newUser = (new User())
-            ->setInvited($invited)
-            ->setName($data['name'])
-            ->setOrganisation($organisation)
-            ->setPhone($data['phone'])
-            ->setSurname($data['surname']);
-        $password = $this->userPasswordEncoder->encodePassword($newUser, $data['password']);
-        $newUser->setPassword($password);
-        $this->em->persist($newUser);
-        $this->em->flush();
-
-
         return $result;
+
     }
 
-    private function getOrganisationByName(string $name): Organisation
-    {
-        $organisation = $this->em->getRepository(Organisation::class)->findOneBy(['name' => $name]);
-
-        if ($organisation === null) {
-            $organisation = (new Organisation())
-                ->setName($name);
-
-            $this->em->persist($organisation);
-            $this->em->flush();
-        }
-
-        return $organisation;
-    }
-
-    private function validation(array $data): array
+    private function validationData(array $data): array
     {
         $result = [
             'status' => true,
@@ -154,6 +181,35 @@ class UserService
         }
 
         return $result;
+    }
+
+    private function validationPassword(array $data)
+    {
+        $result = [
+            'status' => true,
+            'message' => ''
+        ];
+
+        if (empty($data['password'])) {
+            $result['status'] = false;
+            $result['message'] = 'Отсутствует пароль';
+            return $result;
+        }
+
+        if (empty($data['confirmed-password'])) {
+            $result['status'] = false;
+            $result['message'] = 'Отсутствет подтверждение пароля';
+            return $result;
+        }
+
+        if ($data['password'] !== $data['confirmed-password']) {
+            $result['status'] = false;
+            $result['message'] = 'Пароли не совпадают';
+            return $result;
+        }
+
+        return $result;
+
     }
 
 }
