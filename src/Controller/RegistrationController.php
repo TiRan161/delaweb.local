@@ -22,7 +22,6 @@ class RegistrationController extends AbstractController
     public function index()
     {
         $users = $this->userService->getUsers();
-        var_dump($users);
 
         return $this->render('registration.html.twig', ['users' => $users]);
     }
