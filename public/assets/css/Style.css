@@ -1,28 +1,122 @@
 /*@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');*/
 
+/*html {*/
+/*    height: 100%;*/
+/*    box-sizing: border-box;*/
+
+/*}*/
+
+/*body {*/
+/*    !*background-image: url("../images/classy-fabric.png");*!*/
+/*    background-color: #f5f5f5;*/
+/*    font-family: Roboto, sans-serif;*/
+/*    height: 100%;*/
+/*}*/
+
+
+/*.content {*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    height: 100%;*/
+/*}*/
+
+/*.content-form {*/
+/*    height: 25%;*/
+/*    width: 30%;*/
+/*    background-color: white;*/
+/*    border-radius: 10px;*/
+/*    padding: 5px 10px;*/
+/*    max-height: 30rem;*/
+/*    margin: auto;*/
+
+/*}*/
+
+/*.style_header {*/
+/*    padding: 100px 0;*/
+/*}*/
+
+/*.container-fluid {*/
+/*    height: 100%;*/
+/*}*/
+
+/*.style_inner {*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    height: 100%;*/
+/*    width: 100%;*/
+/*    !*min-width: 23rem;*!*/
+
+
+/*}*/
+
+/*.form-sign-in {*/
+/*    text-align: center;*/
+/*    margin: auto;*/
+/*    max-width: 330px;*/
+/*}*/
+
+/*.form-sign-in .form-control {*/
+/*    position: relative;*/
+/*    box-sizing: border-box;*/
+/*    height: auto;*/
+/*    padding: 10px;*/
+/*    font-size: 16px;*/
+/*}*/
+html,
+body {
+    height: 100%;
+}
+
 body {
     background-image: url("../images/classy-fabric.png");
-    background-color: #313131;
-}
-.style_header {
-    padding: 100px 0;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center;
+    padding-top: 40px;
+    padding-bottom: 40px;
+    background-color: #f5f5f5;
 }
 
-.style_inner {
+.form-signin {
     width: 100%;
-    /*min-width: 23rem;*/
     max-width: 330px;
-    background-color: white;
-    border-radius: 10px;
-    padding: 5px 10px;
-    text-align: center;
+    padding: 15px;
     margin: auto;
+    color: #e0e0e0;
 }
-
-.form-sign-in .form-control {
+.form-signin .checkbox {
+    font-weight: 400;
+}
+.form-signin .form-control {
     position: relative;
     box-sizing: border-box;
     height: auto;
     padding: 10px;
     font-size: 16px;
+}
+.form-signin .form-control:focus {
+    z-index: 2;
+}
+.form-signin input[type="text"] {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+.form-signin input[type="password"] {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.form-signin button {
+    margin-top: 30px;
+}
+
+.form-profile {
+    width: 100%;
+    /*max-width: 400px;*/
+    padding: 15px;
+    margin: auto;
+    color: #e0e0e0;
 }
