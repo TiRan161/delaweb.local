@@ -1,0 +1,28 @@
+/*@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');*/
+
+body {
+    background-image: url("../images/classy-fabric.png");
+    background-color: #313131;
+}
+.style_header {
+    padding: 100px 0;
+}
+
+.style_inner {
+    width: 100%;
+    /*min-width: 23rem;*/
+    max-width: 330px;
+    background-color: white;
+    border-radius: 10px;
+    padding: 5px 10px;
+    text-align: center;
+    margin: auto;
+}
+
+.form-sign-in .form-control {
+    position: relative;
+    box-sizing: border-box;
+    height: auto;
+    padding: 10px;
+    font-size: 16px;
+}

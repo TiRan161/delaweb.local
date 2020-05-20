@@ -1,10 +1,11 @@
 {% extends 'base.html.twig' %}
 {% block title %} Профиль {% endblock %}
 {% block body %}
-    <div style="justify-content: center; display: flex; align-items: center; width: 500px; margin: auto">
-
+    <div class="style_header"></div>
+{#    <div style="justify-content: center; display: flex; align-items: center; width: 500px; margin: auto">#}
+<div class="container">
         <form name="profile-form" id="profile-form" method="post">
-            <h1>Личные данные</h1>
+            <h1>Профиль</h1>
             <div class="form-group">
                 <label for="name">Имя</label>
                 <input name="name" type="text" class="form-control" id="name" value="{{ user.name }}">
