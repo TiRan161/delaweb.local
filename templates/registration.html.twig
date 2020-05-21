@@ -1,56 +1,55 @@
 {% extends 'base.html.twig' %}
 {% block title %} Регистрация {% endblock %}
 {% block body %}
-    <div style="justify-content: center; display: flex; align-items: center; width: 20%; margin: auto">
 
-        <form class="form-profile" id="form-profile"  method="post">
-            <h1>Регистрационные данные</h1>
-            <div class="form-group">
-                <label for="name" class="sr-only">Имя</label>
-                <input name="name" type="text" class="form-control" id="name" placeholder="Имя">
-            </div>
+    <form class="form-profile" id="form-profile" method="post">
+        <h1>Регистрационные данные</h1>
+        <div class="form-group">
+            <label for="name" class="sr-only">Имя</label>
+            <input name="name" type="text" class="form-control" id="name" placeholder="Имя">
+        </div>
 
-            <div class="form-group">
-                <label for="surname" class="sr-only">Фамилия</label>
-                <input name="surname" type="text" class="form-control" id="surname" placeholder="Фамилия">
-            </div>
+        <div class="form-group">
+            <label for="surname" class="sr-only">Фамилия</label>
+            <input name="surname" type="text" class="form-control" id="surname" placeholder="Фамилия">
+        </div>
 
-            <div class="form-group">
-                <label for="phone" class="sr-only">Телефон</label>
-                <input name="phone" type="number" class="form-control" id="phone" placeholder="Телефон">
-                <small id="emailHelp" class="form-text text-muted">Длина поля  от 6 до 15 символов</small>
-            </div>
+        <div class="form-group">
+            <label for="phone" class="sr-only">Телефон</label>
+            <input name="phone" type="number" class="form-control" id="phone" placeholder="Телефон">
+            <small id="emailHelp" class="form-text text-muted">Длина поля от 6 до 15 символов</small>
+        </div>
 
-            <div class="form-group">
-                <label for="invited" class="sr-only">Кто вас пригласил?</label>
-                <select name="invited" class="form-control" id="invited">
-                    {% for user in users %}
-                        <option value="{{ user.id }}">{{ user.name }} {{ user.surname }}</option>
-                    {% endfor %}
-                </select>
-                <small id="emailHelp" class="form-text text-muted">Выберите того, кто вас пригласил</small>
-            </div>
+        <div class="form-group">
+            <label for="invited" class="sr-only">Кто вас пригласил?</label>
+            <select name="invited" class="form-control" id="invited">
+                {% for user in users %}
+                    <option value="{{ user.id }}">{{ user.name }} {{ user.surname }}</option>
+                {% endfor %}
+            </select>
+            <small id="emailHelp" class="form-text text-muted">Выберите того, кто вас пригласил</small>
+        </div>
 
-            <div class="form-group">
-                <label for="organisation" class="sr-only">Организация</label>
-                <input name="organisation" type="text" class="form-control" id="organisation" placeholder="Организация">
-                <small id="emailHelp" class="form-text text-muted">Укажите вашу организацию</small>
-            </div>
+        <div class="form-group">
+            <label for="organisation" class="sr-only">Организация</label>
+            <input name="organisation" type="text" class="form-control" id="organisation" placeholder="Организация">
+            <small id="emailHelp" class="form-text text-muted">Укажите вашу организацию</small>
+        </div>
 
-            <div class="form-group">
-                <label for="password" class="sr-only">Пароль</label>
-                <input name="password" type="password" class="form-control" id="password" placeholder="Пароль">
-            </div>
+        <div class="form-group">
+            <label for="password" class="sr-only">Пароль</label>
+            <input name="password" type="password" class="form-control" id="password" placeholder="Пароль">
+        </div>
 
-            <div class="form-group">
-                <label for="confirmed-password" class="sr-only">Повторите пароль</label>
-                <input name="confirmed-password" type="password" class="form-control" id="confirmed-password" placeholder="Повторите пароль">
-            </div>
+        <div class="form-group">
+            <label for="confirmed-password" class="sr-only">Повторите пароль</label>
+            <input name="confirmed-password" type="password" class="form-control" id="confirmed-password"
+                   placeholder="Повторите пароль">
+        </div>
 
-            <button id="doRegistration" type="submit" class="btn btn-primary btn-block">Регистрация</button>
+        <button id="doRegistration" type="submit" class="btn btn-primary btn-block">Регистрация</button>
 
-        </form>
-    </div>
+    </form>
 
     <script>
         $('#doRegistration').on('click', function (e) {
@@ -63,7 +62,11 @@
                 type: 'POST',
                 data: formData,
                 success: function (data) {
-                    alert(data)
+                    if (data.status === true) {
+                        return window.location.href = '/login';
+                    }
+
+                    return alert(data.message);
 
                 }
             })

@@ -4,7 +4,7 @@
     <div class="style_header"></div>
 {#    <div style="justify-content: center; display: flex; align-items: center; width: 500px; margin: auto">#}
 <div class="container">
-        <form name="profile-form" id="profile-form" method="post">
+        <form class="form-profile" name="profile-form" id="profile-form" method="post">
             <h1>Профиль</h1>
             <div class="form-group">
                 <label for="name">Имя</label>
@@ -58,14 +58,18 @@
     <script>
         $('#saveProfileButton').on('click', function (e) {
             e.preventDefault();
-            const formData = $('#profile-form').serialize()
+            const formData = $('#profile-form').serialize();
 
             $.ajax({
                 url: '/user/profile',
                 type: 'POST',
                 data: formData,
                 success: function (data) {
-                    alert(data)
+                    if (!data.status) {
+                        return alert('Не удалось изменить данные - '+ data.message);
+                    }
+                    return alert('Данные успешно изменены!');
+
 
                 }
             })
