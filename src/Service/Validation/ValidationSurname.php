@@ -16,7 +16,7 @@ class ValidationSurname extends AbstractValidation
             return $this->message = 'Фамилия Not valid type';
         }
 
-        if (!(preg_match("/^[а-яёa-z]+$/iu",$this->value))) {
+        if (!(preg_match("/^[а-яёa-z]+$/iu", $this->value))) {
             return $this->message = 'Фамилия содержит неподходящие символы';
         }
 

@@ -9,7 +9,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
@@ -74,7 +73,6 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
         if (!$user) {
             // fail authentication with a custom error
             throw new CustomUserMessageAuthenticationException('Телефон не найден.');
-//            throw new CustomUserMessageAuthenticationException('Phone could not be found.');
         }
 
         return $user;
@@ -83,10 +81,9 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
     public function checkCredentials($credentials, UserInterface $user)
     {
         $password = $credentials['password'];
-        if (!$this->userPasswordEncoder->isPasswordValid($user,$password)) {
+        if (!$this->userPasswordEncoder->isPasswordValid($user, $password)) {
             throw new PasswordNotValid();
         }
-//        return $this->userPasswordEncoder->isPasswordValid($user,$password);
         return true;
     }
 
@@ -96,9 +93,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
             return new RedirectResponse($targetPath);
         }
 
-        // For example : return new RedirectResponse($this->urlGenerator->generate('some_route'));
         return new RedirectResponse($this->urlGenerator->generate('profile'));
-//        throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
     }
 
     protected function getLoginUrl()

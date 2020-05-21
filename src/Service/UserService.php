@@ -12,7 +12,6 @@ use App\Service\Validation\ValidationName;
 use App\Service\Validation\ValidationOrganisation;
 use App\Service\Validation\ValidationPhone;
 use App\Service\Validation\ValidationSurname;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;

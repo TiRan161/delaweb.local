@@ -16,7 +16,7 @@ class ValidationName extends AbstractValidation
             return $this->message = 'Имя Not valid type';
         }
 
-        if (!(preg_match("/^[а-яёa-z]+$/iu",$this->value))) {
+        if (!(preg_match("/^[а-яёa-z]+$/iu", $this->value))) {
             return $this->message = 'Имя содержит неподходящие символы';
         }
 

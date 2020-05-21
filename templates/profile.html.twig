@@ -2,8 +2,7 @@
 {% block title %} Профиль {% endblock %}
 {% block body %}
     <div class="style_header"></div>
-{#    <div style="justify-content: center; display: flex; align-items: center; width: 500px; margin: auto">#}
-<div class="container">
+    <div class="container">
         <form class="form-profile" name="profile-form" id="profile-form" method="post">
             <h1>Профиль</h1>
             <div class="form-group">
@@ -39,18 +38,11 @@
                 <input name="organisation" type="text" class="form-control" id="organisation"
                        value="{{ user.organisation.name }}">
             </div>
-
-            {#            <div class="form-group">#}
-            {#                <label for="password">Пароль</label>#}
-            {#                <input name="password" type="password" class="form-control" id="password">#}
-            {#            </div>#}
-
-            {#            <div class="form-group">#}
-            {#                <label for="confirmed-password">Подтвердите пароль</label>#}
-            {#                <input name="confirmed-password" type="password" class="form-control" id="confirmed-password">#}
-            {#            </div>#}
-
             <button id="saveProfileButton" type="submit" class="btn btn-primary btn-block">Сохранить изменения</button>
+            <button id="logoutButton" type="button" class="btn btn-danger btn-block"
+                    onclick="window.location.href = '/logout'">Выйти
+            </button>
+
 
         </form>
     </div>
@@ -66,7 +58,7 @@
                 data: formData,
                 success: function (data) {
                     if (!data.status) {
-                        return alert('Не удалось изменить данные - '+ data.message);
+                        return alert('Не удалось изменить данные - ' + data.message);
                     }
                     return alert('Данные успешно изменены!');
 

@@ -10,7 +10,7 @@ class PasswordNotValid extends AuthenticationException
 {
     public function getMessageKey()
     {
-        return 'Пароль не валидный';
+        return 'Некорректный пароль';
     }
 
 }

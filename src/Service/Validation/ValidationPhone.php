@@ -19,7 +19,7 @@ class ValidationPhone extends AbstractValidation
             return $this->message = 'Телефон Not valid type';
         }
 
-        if (strlen($value) < 6 || strlen($value) > 15  ) {
+        if (strlen($value) < 6 || strlen($value) > 15) {
             return $this->message = 'Длина номера не соответствует заданному диапазону 6-15';
         }
 

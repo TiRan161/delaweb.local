@@ -24,10 +24,6 @@ class ProfileController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
         $users = $this->userService->getUsersNotEqual($user);
-
-
-        //
-
         return $this->render('profile.html.twig', ['user' => $user, 'users' => $users]);
     }
 
